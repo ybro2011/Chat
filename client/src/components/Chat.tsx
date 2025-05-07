@@ -16,6 +16,7 @@ function Chat({ user, socket }: ChatProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [message, setMessage] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -59,17 +60,26 @@ function Chat({ user, socket }: ChatProps) {
     scrollToBottom();
   }, [messages]);
 
-  const sendMessage = (e?: React.FormEvent) => {
-    if (e) {
-      e.preventDefault();
-    }
-    if (message.trim()) {
-      socket.emit('message', { 
-        user, 
-        text: message,
-        time: new Date().toLocaleTimeString()
-      });
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    if (!message.trim()) return;
+
+    const newMessage = {
+      user,
+      text: message.trim(),
+      time: new Date().toLocaleTimeString()
+    };
+
+    try {
+      socket.emit('message', newMessage);
       setMessage('');
+      if (inputRef.current) {
+        inputRef.current.focus();
+      }
+    } catch (error) {
+      console.error('Error sending message:', error);
     }
   };
 
@@ -103,15 +113,20 @@ function Chat({ user, socket }: ChatProps) {
         <div ref={messagesEndRef} />
       </div>
       <div className="p-4 border-t border-[#00ff00] bg-black">
-        <form onSubmit={sendMessage} className="flex space-x-4">
+        <form 
+          onSubmit={handleSubmit} 
+          className="flex space-x-4"
+          onClick={(e) => e.stopPropagation()}
+        >
           <input
+            ref={inputRef}
             type="text"
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             onKeyDown={(e) => {
               if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
-                sendMessage();
+                handleSubmit(e);
               }
             }}
             className="flex-1 bg-[#0a0a0a] text-[#00ff00] rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#00ff00] border border-[#00ff00]"
