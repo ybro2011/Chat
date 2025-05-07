@@ -1,0 +1,59 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --hacker-green: #00ff00;
+  --hacker-dark: #0a0a0a;
+}
+
+body {
+  background-color: var(--hacker-dark);
+  color: var(--hacker-green);
+  font-family: 'Courier New', monospace;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.cursor-blink::after {
+  content: '|';
+  animation: blink 1s infinite;
+}
+
+.hacker-text {
+  text-shadow: 0 0 2px var(--hacker-green);
+}
+
+.hacker-border {
+  border: 1px solid var(--hacker-green);
+  box-shadow: 0 0 5px var(--hacker-green);
+}
+
+.hacker-input {
+  background-color: var(--hacker-dark);
+  border: 1px solid var(--hacker-green);
+  color: var(--hacker-green);
+  text-shadow: 0 0 2px var(--hacker-green);
+}
+
+.hacker-input:focus {
+  outline: none;
+  box-shadow: 0 0 5px var(--hacker-green);
+}
+
+.hacker-button {
+  background-color: var(--hacker-dark);
+  border: 1px solid var(--hacker-green);
+  color: var(--hacker-green);
+  text-shadow: 0 0 2px var(--hacker-green);
+  transition: all 0.3s ease;
+}
+
+.hacker-button:hover {
+  background-color: var(--hacker-green);
+  color: var(--hacker-dark);
+  text-shadow: none;
+} 
