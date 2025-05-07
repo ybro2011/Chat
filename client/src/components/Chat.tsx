@@ -26,7 +26,11 @@ function Chat({ user, socket }: ChatProps) {
     socket.emit('join', user);
 
     const handleMessage = (msg: Message) => {
-      setMessages(prev => [...prev, msg]);
+      setMessages(prev => [...prev, {
+        user: msg.user,
+        text: msg.text,
+        time: msg.time
+      }]);
     };
 
     const handleUserJoined = ({ message }: { message: string }) => {
@@ -66,7 +70,7 @@ function Chat({ user, socket }: ChatProps) {
     
     if (!message.trim()) return;
 
-    const newMessage = {
+    const newMessage: Message = {
       user,
       text: message.trim(),
       time: new Date().toLocaleTimeString()
