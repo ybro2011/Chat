@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { Socket } from 'socket.io-client';
 
 interface LoginProps {
   onLogin: (username: string, roomCode: string) => void;
