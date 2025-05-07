@@ -16,7 +16,6 @@ function Chat({ user, socket }: ChatProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [message, setMessage] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const formRef = useRef<HTMLFormElement>(null);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -60,22 +59,17 @@ function Chat({ user, socket }: ChatProps) {
     scrollToBottom();
   }, [messages]);
 
-  const sendMessage = () => {
-    if (message.trim()) {
-      socket.emit('message', { user, text: message });
-      setMessage('');
-    }
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    sendMessage();
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
+  const sendMessage = (e?: React.FormEvent) => {
+    if (e) {
       e.preventDefault();
-      sendMessage();
+    }
+    if (message.trim()) {
+      socket.emit('message', { 
+        user, 
+        text: message,
+        time: new Date().toLocaleTimeString()
+      });
+      setMessage('');
     }
   };
 
@@ -109,12 +103,17 @@ function Chat({ user, socket }: ChatProps) {
         <div ref={messagesEndRef} />
       </div>
       <div className="p-4 border-t border-[#00ff00] bg-black">
-        <form ref={formRef} onSubmit={handleSubmit} className="flex space-x-4">
+        <form onSubmit={sendMessage} className="flex space-x-4">
           <input
             type="text"
             value={message}
             onChange={(e) => setMessage(e.target.value)}
-            onKeyDown={handleKeyDown}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+              }
+            }}
             className="flex-1 bg-[#0a0a0a] text-[#00ff00] rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#00ff00] border border-[#00ff00]"
             placeholder="Type a message..."
           />
