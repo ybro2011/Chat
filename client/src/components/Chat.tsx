@@ -33,19 +33,19 @@ function Chat({ user, socket }: ChatProps) {
       }]);
     };
 
-    const handleUserJoined = ({ message }: { message: string }) => {
+    const handleUserJoined = (data: { message: string; time: string }) => {
       setMessages(prev => [...prev, { 
         user: 'SYSTEM', 
-        text: message, 
-        time: new Date().toLocaleTimeString() 
+        text: data.message, 
+        time: data.time
       }]);
     };
 
-    const handleUserLeft = ({ message }: { message: string }) => {
+    const handleUserLeft = (data: { message: string; time: string }) => {
       setMessages(prev => [...prev, { 
         user: 'SYSTEM', 
-        text: message, 
-        time: new Date().toLocaleTimeString() 
+        text: data.message, 
+        time: data.time
       }]);
     };
 
