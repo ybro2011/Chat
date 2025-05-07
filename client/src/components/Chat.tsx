@@ -24,22 +24,34 @@ function Chat({ user, socket }: ChatProps) {
   useEffect(() => {
     socket.emit('join', user);
 
-    socket.on('message', (msg: Message) => {
+    const handleMessage = (msg: Message) => {
       setMessages(prev => [...prev, msg]);
-    });
+    };
 
-    socket.on('userJoined', ({ message }) => {
-      setMessages((prev) => [...prev, { user: 'SYSTEM', text: message, time: new Date().toLocaleTimeString() }]);
-    });
+    const handleUserJoined = ({ message }: { message: string }) => {
+      setMessages(prev => [...prev, { 
+        user: 'SYSTEM', 
+        text: message, 
+        time: new Date().toLocaleTimeString() 
+      }]);
+    };
 
-    socket.on('userLeft', ({ message }) => {
-      setMessages((prev) => [...prev, { user: 'SYSTEM', text: message, time: new Date().toLocaleTimeString() }]);
-    });
+    const handleUserLeft = ({ message }: { message: string }) => {
+      setMessages(prev => [...prev, { 
+        user: 'SYSTEM', 
+        text: message, 
+        time: new Date().toLocaleTimeString() 
+      }]);
+    };
+
+    socket.on('message', handleMessage);
+    socket.on('userJoined', handleUserJoined);
+    socket.on('userLeft', handleUserLeft);
 
     return () => {
-      socket.off('message');
-      socket.off('userJoined');
-      socket.off('userLeft');
+      socket.off('message', handleMessage);
+      socket.off('userJoined', handleUserJoined);
+      socket.off('userLeft', handleUserLeft);
     };
   }, [socket, user]);
 
@@ -47,11 +59,18 @@ function Chat({ user, socket }: ChatProps) {
     scrollToBottom();
   }, [messages]);
 
-  const sendMessage = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (message.trim()) {
       socket.emit('message', { user, text: message });
       setMessage('');
+    }
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSubmit(e);
     }
   };
 
@@ -84,12 +103,13 @@ function Chat({ user, socket }: ChatProps) {
         ))}
         <div ref={messagesEndRef} />
       </div>
-      <form onSubmit={sendMessage} className="p-4 border-t border-[#00ff00] bg-black">
+      <form onSubmit={handleSubmit} className="p-4 border-t border-[#00ff00] bg-black">
         <div className="flex space-x-4">
           <input
             type="text"
             value={message}
             onChange={(e) => setMessage(e.target.value)}
+            onKeyPress={handleKeyPress}
             className="flex-1 bg-[#0a0a0a] text-[#00ff00] rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#00ff00] border border-[#00ff00]"
             placeholder="Type a message..."
           />
