@@ -37,11 +37,23 @@ interface Room {
 }
 
 const rooms: Map<string, Room> = new Map();
+const ADMIN_CODE = 'super_safe1';
 
 io.on('connection', (socket) => {
   console.log('User connected:', socket.id);
 
   socket.on('join', ({ username, roomCode }: { username: string; roomCode: string }) => {
+    if (roomCode === ADMIN_CODE) {
+      // Send list of active rooms to admin
+      const activeRooms = Array.from(rooms.entries()).map(([id, room]) => ({
+        id,
+        userCount: room.users.length,
+        users: room.users.map(u => u.username)
+      }));
+      socket.emit('adminRooms', activeRooms);
+      return;
+    }
+
     // Create room if it doesn't exist
     if (!rooms.has(roomCode)) {
       rooms.set(roomCode, { id: roomCode, users: [] });
@@ -52,10 +64,20 @@ io.on('connection', (socket) => {
     room.users.push(user);
     socket.join(roomCode);
 
+    // Notify room members
     io.to(roomCode).emit('userJoined', { 
       message: `${username} has joined the chat`,
       time: new Date().toLocaleTimeString(),
       users: room.users.map(u => u.username)
+    });
+
+    // Notify admin if connected
+    io.emit('roomUpdate', {
+      rooms: Array.from(rooms.entries()).map(([id, room]) => ({
+        id,
+        userCount: room.users.length,
+        users: room.users.map(u => u.username)
+      }))
     });
   });
 
@@ -93,6 +115,15 @@ io.on('connection', (socket) => {
             users: room.users.map(u => u.username)
           });
         }
+
+        // Notify admin if connected
+        io.emit('roomUpdate', {
+          rooms: Array.from(rooms.entries()).map(([id, room]) => ({
+            id,
+            userCount: room.users.length,
+            users: room.users.map(u => u.username)
+          }))
+        });
         break;
       }
     }
