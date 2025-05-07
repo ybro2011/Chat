@@ -16,6 +16,7 @@ function Chat({ user, socket }: ChatProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [message, setMessage] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const formRef = useRef<HTMLFormElement>(null);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -59,18 +60,22 @@ function Chat({ user, socket }: ChatProps) {
     scrollToBottom();
   }, [messages]);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const sendMessage = () => {
     if (message.trim()) {
       socket.emit('message', { user, text: message });
       setMessage('');
     }
   };
 
-  const handleKeyPress = (e: React.KeyboardEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    sendMessage();
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
-      handleSubmit(e);
+      sendMessage();
     }
   };
 
@@ -103,13 +108,13 @@ function Chat({ user, socket }: ChatProps) {
         ))}
         <div ref={messagesEndRef} />
       </div>
-      <form onSubmit={handleSubmit} className="p-4 border-t border-[#00ff00] bg-black">
-        <div className="flex space-x-4">
+      <div className="p-4 border-t border-[#00ff00] bg-black">
+        <form ref={formRef} onSubmit={handleSubmit} className="flex space-x-4">
           <input
             type="text"
             value={message}
             onChange={(e) => setMessage(e.target.value)}
-            onKeyPress={handleKeyPress}
+            onKeyDown={handleKeyDown}
             className="flex-1 bg-[#0a0a0a] text-[#00ff00] rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#00ff00] border border-[#00ff00]"
             placeholder="Type a message..."
           />
@@ -119,8 +124,8 @@ function Chat({ user, socket }: ChatProps) {
           >
             Send
           </button>
-        </div>
-      </form>
+        </form>
+      </div>
     </div>
   );
 }
