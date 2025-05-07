@@ -8,13 +8,13 @@ interface Message {
 }
 
 interface ChatProps {
+  user: string;
   socket: Socket;
-  username: string;
 }
 
-function Chat({ socket, username }: ChatProps) {
+function Chat({ user, socket }: ChatProps) {
   const [messages, setMessages] = useState<Message[]>([]);
-  const [newMessage, setNewMessage] = useState('');
+  const [message, setMessage] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -22,8 +22,10 @@ function Chat({ socket, username }: ChatProps) {
   };
 
   useEffect(() => {
-    socket.on('message', (message: Message) => {
-      setMessages((prev) => [...prev, message]);
+    socket.emit('join', user);
+
+    socket.on('message', (msg: Message) => {
+      setMessages(prev => [...prev, msg]);
     });
 
     socket.on('userJoined', ({ message }) => {
@@ -39,17 +41,17 @@ function Chat({ socket, username }: ChatProps) {
       socket.off('userJoined');
       socket.off('userLeft');
     };
-  }, [socket]);
+  }, [socket, user]);
 
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const sendMessage = (e: React.FormEvent) => {
     e.preventDefault();
-    if (newMessage.trim()) {
-      socket.emit('message', newMessage);
-      setNewMessage('');
+    if (message.trim()) {
+      socket.emit('message', { user, text: message });
+      setMessage('');
     }
   };
 
@@ -57,46 +59,46 @@ function Chat({ socket, username }: ChatProps) {
     <div className="max-w-4xl mx-auto bg-[#0a0a0a] rounded-lg hacker-border">
       <div className="h-[600px] flex flex-col">
         <div className="flex-1 overflow-y-auto p-4 space-y-4">
-          {messages.map((message, index) => (
+          {messages.map((msg, index) => (
             <div
               key={index}
               className={`flex ${
-                message.user === username ? 'justify-end' : 'justify-start'
+                msg.user === user ? 'justify-end' : 'justify-start'
               }`}
             >
               <div
                 className={`max-w-[70%] rounded-lg p-3 ${
-                  message.user === username
+                  msg.user === user
                     ? 'bg-[#003300] text-[#00ff00]'
-                    : message.user === 'SYSTEM'
+                    : msg.user === 'SYSTEM'
                     ? 'bg-[#0a0a0a] text-[#00ff00] hacker-border'
                     : 'bg-[#0a0a0a] text-[#00ff00] hacker-border'
                 }`}
               >
-                {message.user !== 'SYSTEM' && (
-                  <div className="font-semibold hacker-text">&gt; {message.user}</div>
+                {msg.user !== 'SYSTEM' && (
+                  <div className="font-semibold hacker-text">&gt; {msg.user}</div>
                 )}
-                <div className="hacker-text">{message.text}</div>
-                <div className="text-xs opacity-75 mt-1 hacker-text">[{message.time}]</div>
+                <div className="hacker-text">{msg.text}</div>
+                <div className="text-xs opacity-75 mt-1 hacker-text">[{msg.time}]</div>
               </div>
             </div>
           ))}
           <div ref={messagesEndRef} />
         </div>
-        <form onSubmit={handleSubmit} className="p-4 border-t border-[#00ff00]">
-          <div className="flex space-x-2">
+        <form onSubmit={sendMessage} className="p-4 border-t border-[#00ff00]">
+          <div className="flex space-x-4">
             <input
               type="text"
-              value={newMessage}
-              onChange={(e) => setNewMessage(e.target.value)}
-              className="flex-1 rounded-md hacker-input p-2"
-              placeholder="ENTER_MESSAGE..."
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              className="flex-1 bg-gray-800 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+              placeholder="Type a message..."
             />
             <button
               type="submit"
-              className="px-4 py-2 hacker-button rounded-md"
+              className="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500"
             >
-              SEND
+              Send
             </button>
           </div>
         </form>

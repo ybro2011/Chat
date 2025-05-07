@@ -1,29 +1,16 @@
-import { useState, useEffect } from 'react';
-import { io, Socket } from 'socket.io-client';
-import Chat from './components/Chat';
+import { useState } from 'react';
+import { io } from 'socket.io-client';
 import Login from './components/Login';
+import Chat from './components/Chat';
 
 const socket = io(import.meta.env.PROD ? window.location.origin : 'http://localhost:3000');
 
 function App() {
-  const [username, setUsername] = useState<string>('');
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  const handleLogin = (name: string) => {
-    setUsername(name);
-    setIsLoggedIn(true);
-    socket.emit('join', name);
-  };
+  const [user, setUser] = useState<string | null>(null);
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a]">
-      <div className="container mx-auto px-4 py-8">
-        {!isLoggedIn ? (
-          <Login onLogin={handleLogin} />
-        ) : (
-          <Chat socket={socket} username={username} />
-        )}
-      </div>
+    <div className="min-h-screen bg-black text-green-500">
+      {!user ? <Login onLogin={setUser} /> : <Chat user={user} socket={socket} />}
     </div>
   );
 }

@@ -6,61 +6,37 @@ interface LoginProps {
 
 function Login({ onLogin }: LoginProps) {
   const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (username.trim() && password === 'super_safe1') {
+    if (username.trim()) {
       onLogin(username.trim());
-    } else {
-      setError('Invalid password');
     }
   };
 
   return (
-    <div className="max-w-md mx-auto bg-[#0a0a0a] rounded-lg hacker-border p-6">
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label htmlFor="username" className="block text-sm font-medium text-[#00ff00] hacker-text">
-            &gt; Enter username
-          </label>
-          <input
-            type="text"
-            id="username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            className="mt-1 block w-full rounded-md hacker-input p-2"
-            placeholder="Username"
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="password" className="block text-sm font-medium text-[#00ff00] hacker-text">
-            &gt; Enter password
-          </label>
-          <input
-            type="password"
-            id="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="mt-1 block w-full rounded-md hacker-input p-2"
-            placeholder="Password"
-            required
-          />
-        </div>
-        {error && (
-          <div className="text-red-500 text-sm hacker-text">
-            &gt; {error}
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="bg-gray-900 p-8 rounded-lg shadow-lg w-96">
+        <h1 className="text-2xl font-bold text-green-500 mb-6 text-center">Talkk</h1>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <input
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              className="w-full bg-gray-800 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+              placeholder="Enter your username"
+              required
+            />
           </div>
-        )}
-        <button
-          type="submit"
-          className="w-full flex justify-center py-2 px-4 hacker-button rounded-md"
-        >
-          Join Chat
-        </button>
-      </form>
+          <button
+            type="submit"
+            className="w-full bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500"
+          >
+            Join Chat
+          </button>
+        </form>
+      </div>
     </div>
   );
 }
