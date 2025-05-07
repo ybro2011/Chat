@@ -56,53 +56,51 @@ function Chat({ user, socket }: ChatProps) {
   };
 
   return (
-    <div className="max-w-4xl mx-auto bg-[#0a0a0a] rounded-lg hacker-border">
-      <div className="h-[600px] flex flex-col">
-        <div className="flex-1 overflow-y-auto p-4 space-y-4">
-          {messages.map((msg, index) => (
+    <div className="flex flex-col h-screen bg-black">
+      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+        {messages.map((msg, index) => (
+          <div
+            key={index}
+            className={`flex ${
+              msg.user === user ? 'justify-end' : 'justify-start'
+            }`}
+          >
             <div
-              key={index}
-              className={`flex ${
-                msg.user === user ? 'justify-end' : 'justify-start'
+              className={`max-w-[70%] rounded-lg p-3 ${
+                msg.user === user
+                  ? 'bg-[#003300] text-[#00ff00]'
+                  : msg.user === 'SYSTEM'
+                  ? 'bg-[#0a0a0a] text-[#00ff00] border border-[#00ff00]'
+                  : 'bg-[#0a0a0a] text-[#00ff00] border border-[#00ff00]'
               }`}
             >
-              <div
-                className={`max-w-[70%] rounded-lg p-3 ${
-                  msg.user === user
-                    ? 'bg-[#003300] text-[#00ff00]'
-                    : msg.user === 'SYSTEM'
-                    ? 'bg-[#0a0a0a] text-[#00ff00] hacker-border'
-                    : 'bg-[#0a0a0a] text-[#00ff00] hacker-border'
-                }`}
-              >
-                {msg.user !== 'SYSTEM' && (
-                  <div className="font-semibold hacker-text">&gt; {msg.user}</div>
-                )}
-                <div className="hacker-text">{msg.text}</div>
-                <div className="text-xs opacity-75 mt-1 hacker-text">[{msg.time}]</div>
-              </div>
+              {msg.user !== 'SYSTEM' && (
+                <div className="font-semibold">&gt; {msg.user}</div>
+              )}
+              <div>{msg.text}</div>
+              <div className="text-xs opacity-75 mt-1">[{msg.time}]</div>
             </div>
-          ))}
-          <div ref={messagesEndRef} />
-        </div>
-        <form onSubmit={sendMessage} className="p-4 border-t border-[#00ff00]">
-          <div className="flex space-x-4">
-            <input
-              type="text"
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-              className="flex-1 bg-gray-800 text-white rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
-              placeholder="Type a message..."
-            />
-            <button
-              type="submit"
-              className="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500"
-            >
-              Send
-            </button>
           </div>
-        </form>
+        ))}
+        <div ref={messagesEndRef} />
       </div>
+      <form onSubmit={sendMessage} className="p-4 border-t border-[#00ff00] bg-black">
+        <div className="flex space-x-4">
+          <input
+            type="text"
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            className="flex-1 bg-[#0a0a0a] text-[#00ff00] rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#00ff00] border border-[#00ff00]"
+            placeholder="Type a message..."
+          />
+          <button
+            type="submit"
+            className="bg-[#003300] text-[#00ff00] px-6 py-2 rounded-lg hover:bg-[#004400] focus:outline-none focus:ring-2 focus:ring-[#00ff00] border border-[#00ff00]"
+          >
+            Send
+          </button>
+        </div>
+      </form>
     </div>
   );
 }
