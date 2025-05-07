@@ -5,16 +5,19 @@ interface Message {
   user: string;
   text: string;
   time: string;
+  room: string;
 }
 
 interface ChatProps {
   user: string;
+  room: string;
   socket: Socket;
 }
 
-function Chat({ user, socket }: ChatProps) {
+function Chat({ user, room, socket }: ChatProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [message, setMessage] = useState('');
+  const [users, setUsers] = useState<string[]>([]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -23,30 +26,37 @@ function Chat({ user, socket }: ChatProps) {
   };
 
   useEffect(() => {
-    socket.emit('join', user);
+    socket.emit('join', { username: user, roomCode: room });
 
     const handleMessage = (msg: Message) => {
-      setMessages(prev => [...prev, {
-        user: msg.user,
-        text: msg.text,
-        time: msg.time
-      }]);
+      if (msg.room === room) {
+        setMessages(prev => [...prev, {
+          user: msg.user,
+          text: msg.text,
+          time: msg.time,
+          room: msg.room
+        }]);
+      }
     };
 
-    const handleUserJoined = (data: { message: string; time: string }) => {
+    const handleUserJoined = (data: { message: string; time: string; users: string[] }) => {
       setMessages(prev => [...prev, { 
         user: 'SYSTEM', 
         text: data.message, 
-        time: data.time
+        time: data.time,
+        room
       }]);
+      setUsers(data.users);
     };
 
-    const handleUserLeft = (data: { message: string; time: string }) => {
+    const handleUserLeft = (data: { message: string; time: string; users: string[] }) => {
       setMessages(prev => [...prev, { 
         user: 'SYSTEM', 
         text: data.message, 
-        time: data.time
+        time: data.time,
+        room
       }]);
+      setUsers(data.users);
     };
 
     socket.on('message', handleMessage);
@@ -58,7 +68,7 @@ function Chat({ user, socket }: ChatProps) {
       socket.off('userJoined', handleUserJoined);
       socket.off('userLeft', handleUserLeft);
     };
-  }, [socket, user]);
+  }, [socket, user, room]);
 
   useEffect(() => {
     scrollToBottom();
@@ -73,7 +83,8 @@ function Chat({ user, socket }: ChatProps) {
     const newMessage: Message = {
       user,
       text: message.trim(),
-      time: new Date().toLocaleTimeString()
+      time: new Date().toLocaleTimeString(),
+      room
     };
 
     try {
@@ -89,6 +100,14 @@ function Chat({ user, socket }: ChatProps) {
 
   return (
     <div className="flex flex-col h-screen bg-black">
+      <div className="p-4 border-b border-[#00ff00] bg-[#0a0a0a]">
+        <div className="text-[#00ff00]">
+          <div className="font-semibold">&gt; Room: {room}</div>
+          <div className="text-sm opacity-75">
+            &gt; Users: {users.join(', ')}
+          </div>
+        </div>
+      </div>
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
         {messages.map((msg, index) => (
           <div
