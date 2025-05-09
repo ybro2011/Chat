@@ -95,7 +95,9 @@ io.on('connection', (socket) => {
           room: message.room,
           color: user.color
         };
+        // Broadcast to all users in the room including sender
         io.to(message.room).emit('message', chatMessage);
+        console.log('Message sent:', chatMessage); // Add logging for debugging
       }
     }
   });

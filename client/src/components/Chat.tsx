@@ -28,16 +28,21 @@ function Chat({ socket, username, room, userColor, isAdmin = false }: ChatProps)
 
   useEffect(() => {
     const handleMessage = (message: Message) => {
+      console.log('Message received:', message);
       setMessages(prev => [...prev, message]);
       scrollToBottom();
     };
 
-    const handleUserJoined = ({ users: roomUsers }: { users: string[] }) => {
+    const handleUserJoined = ({ message, time, users: roomUsers }: { message: string; time: string; users: string[] }) => {
+      setMessages(prev => [...prev, { user: 'System', text: message, time, color: '#00ff00' }]);
       setUsers(roomUsers);
+      scrollToBottom();
     };
 
-    const handleUserLeft = ({ users: roomUsers }: { users: string[] }) => {
+    const handleUserLeft = ({ message, time, users: roomUsers }: { message: string; time: string; users: string[] }) => {
+      setMessages(prev => [...prev, { user: 'System', text: message, time, color: '#00ff00' }]);
       setUsers(roomUsers);
+      scrollToBottom();
     };
 
     const handleKicked = ({ message }: { message: string }) => {
