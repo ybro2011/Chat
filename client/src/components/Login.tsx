@@ -10,8 +10,8 @@ function Login({ onLogin }: LoginProps) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (username.trim() && roomCode.trim()) {
-      onLogin(username.trim(), roomCode.trim());
+    if (username.trim()) {
+      onLogin(username.trim(), roomCode.trim() || 'main');
     }
   };
 
@@ -30,8 +30,7 @@ function Login({ onLogin }: LoginProps) {
               value={roomCode}
               onChange={(e) => setRoomCode(e.target.value)}
               className="w-full bg-black text-[#00ff00] rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#00ff00] border border-[#00ff00]"
-              placeholder="Enter room code..."
-              required
+              placeholder="Enter room code (leave blank for main room)..."
             />
           </div>
           <div>
