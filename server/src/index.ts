@@ -97,6 +97,41 @@ io.on('connection', (socket) => {
     }
   });
 
+  socket.on('kickUser', ({ roomCode, username }: { roomCode: string; username: string }) => {
+    const room = rooms.get(roomCode);
+    if (room) {
+      const userToKick = room.users.find(u => u.username === username);
+      if (userToKick) {
+        // Find the socket of the user to kick
+        const userSocket = io.sockets.sockets.get(userToKick.id);
+        if (userSocket) {
+          // Notify the user they've been kicked
+          userSocket.emit('kicked', { message: 'You have been kicked from the room' });
+          // Remove user from room
+          room.users = room.users.filter(u => u.id !== userToKick.id);
+          // Notify remaining users
+          io.to(roomCode).emit('userLeft', {
+            message: `${username} has been kicked from the chat`,
+            time: new Date().toLocaleTimeString(),
+            users: room.users.map(u => u.username)
+          });
+          // Remove room if empty
+          if (room.users.length === 0) {
+            rooms.delete(roomCode);
+          }
+          // Notify admin
+          io.emit('roomUpdate', {
+            rooms: Array.from(rooms.entries()).map(([id, room]) => ({
+              id,
+              userCount: room.users.length,
+              users: room.users.map(u => u.username)
+            }))
+          });
+        }
+      }
+    }
+  });
+
   socket.on('disconnect', () => {
     // Find user in all rooms
     for (const [roomCode, room] of rooms.entries()) {
