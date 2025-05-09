@@ -10,10 +10,12 @@ function App() {
   const [user, setUser] = useState<string | null>(null);
   const [room, setRoom] = useState<string | null>(null);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [userColor, setUserColor] = useState('#00ff00');
 
-  const handleLogin = (username: string, roomCode: string) => {
+  const handleLogin = (username: string, roomCode: string, color: string) => {
     setUser(username);
-    if (roomCode === 'super_safe1') {
+    setUserColor(color);
+    if (roomCode === 'password_123') {
       setIsAdmin(true);
     } else {
       setRoom(roomCode);
@@ -32,7 +34,7 @@ function App() {
       ) : isAdmin ? (
         <AdminView socket={socket} onJoinRoom={handleJoinRoom} />
       ) : (
-        <Chat user={user} room={room!} socket={socket} />
+        <Chat username={user} room={room!} socket={socket} userColor={userColor} />
       )}
     </div>
   );

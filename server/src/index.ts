@@ -22,6 +22,7 @@ interface User {
   id: string;
   username: string;
   room: string;
+  color: string;
 }
 
 interface ChatMessage {
@@ -29,6 +30,7 @@ interface ChatMessage {
   text: string;
   time: string;
   room: string;
+  color: string;
 }
 
 interface Room {
@@ -42,7 +44,7 @@ const ADMIN_CODE = 'password_123';
 io.on('connection', (socket) => {
   console.log('User connected:', socket.id);
 
-  socket.on('join', ({ username, roomCode }: { username: string; roomCode: string }) => {
+  socket.on('join', ({ username, roomCode, color }: { username: string; roomCode: string; color: string }) => {
     if (roomCode === ADMIN_CODE) {
       // Send list of active rooms to admin
       const activeRooms = Array.from(rooms.entries()).map(([id, room]) => ({
@@ -60,7 +62,7 @@ io.on('connection', (socket) => {
     }
 
     const room = rooms.get(roomCode)!;
-    const user = { id: socket.id, username, room: roomCode };
+    const user = { id: socket.id, username, room: roomCode, color };
     room.users.push(user);
     socket.join(roomCode);
 
@@ -90,7 +92,8 @@ io.on('connection', (socket) => {
           user: user.username,
           text: message.text,
           time: new Date().toLocaleTimeString(),
-          room: message.room
+          room: message.room,
+          color: user.color
         };
         io.to(message.room).emit('message', chatMessage);
       }

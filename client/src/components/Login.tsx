@@ -1,17 +1,18 @@
 import { useState } from 'react';
 
 interface LoginProps {
-  onLogin: (username: string, roomCode: string) => void;
+  onLogin: (username: string, roomCode: string, color: string) => void;
 }
 
 function Login({ onLogin }: LoginProps) {
   const [username, setUsername] = useState('');
   const [roomCode, setRoomCode] = useState('');
+  const [color, setColor] = useState('#00ff00'); // Default to green
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (username.trim()) {
-      onLogin(username.trim(), roomCode.trim() || 'main');
+      onLogin(username.trim(), roomCode.trim() || 'main', color);
     }
   };
 
@@ -46,6 +47,21 @@ function Login({ onLogin }: LoginProps) {
               placeholder="Enter your username..."
               required
             />
+          </div>
+          <div>
+            <label htmlFor="color" className="block text-[#00ff00] mb-2">
+              &gt; Text Color
+            </label>
+            <div className="flex items-center space-x-2">
+              <input
+                type="color"
+                id="color"
+                value={color}
+                onChange={(e) => setColor(e.target.value)}
+                className="w-12 h-12 rounded-lg cursor-pointer"
+              />
+              <span className="text-[#00ff00] text-sm">Choose your text color</span>
+            </div>
           </div>
           <button
             type="submit"
