@@ -37,7 +37,7 @@ interface Room {
 }
 
 const rooms: Map<string, Room> = new Map();
-const ADMIN_CODE = 'super_safe1';
+const ADMIN_CODE = 'sylvanthemonke';
 
 io.on('connection', (socket) => {
   console.log('User connected:', socket.id);
