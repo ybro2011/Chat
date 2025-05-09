@@ -151,7 +151,7 @@ function Chat({ socket, username, room, userColor, isAdmin = false }: ChatProps)
             onKeyPress={handleKeyPress}
             placeholder="Type your message..."
             style={{ color: userColor }}
-            className="flex-1 bg-[#0a0a0a] p-3 rounded-lg border border-[#00ff00] focus:outline-none focus:ring-2 focus:ring-[#00ff00] resize-none"
+            className="flex-1 bg-[#0a0a0a] p-3 rounded-lg border border-[#00ff00] focus:outline-none focus:ring-2 focus:ring-[#00ff00] resize-none text-[#00ff00]"
             rows={3}
           />
           <button
