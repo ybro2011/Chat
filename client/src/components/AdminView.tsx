@@ -29,6 +29,12 @@ function AdminView({ socket, onJoinRoom }: AdminViewProps) {
     };
   }, [socket]);
 
+  const handleKickUser = (roomId: string, username: string) => {
+    if (window.confirm(`Are you sure you want to kick ${username} from room ${roomId}?`)) {
+      socket.emit('kickUser', { roomCode: roomId, username });
+    }
+  };
+
   return (
     <div className="min-h-screen bg-black p-8">
       <div className="max-w-4xl mx-auto">
@@ -46,6 +52,19 @@ function AdminView({ socket, onJoinRoom }: AdminViewProps) {
                 </div>
                 <div className="text-sm opacity-75 mt-2">
                   &gt; Online: {room.users.join(', ')}
+                </div>
+                <div className="mt-2 space-y-1">
+                  {room.users.map((user) => (
+                    <div key={user} className="flex items-center justify-between">
+                      <span className="text-sm">&gt; {user}</span>
+                      <button
+                        onClick={() => handleKickUser(room.id, user)}
+                        className="text-[#00ff00] hover:text-red-500 px-2 py-1 rounded border border-[#00ff00] hover:border-red-500 text-sm"
+                      >
+                        Kick
+                      </button>
+                    </div>
+                  ))}
                 </div>
                 <button
                   onClick={() => onJoinRoom(room.id)}
