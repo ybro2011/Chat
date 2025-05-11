@@ -4,7 +4,7 @@ services:
     env: node
     buildCommand: npm run build
     startCommand: npm start
-    branch: biology-revision-page
+    branch: refs/heads/biology-revision-page
     envVars:
       - key: NODE_ENV
         value: production 
