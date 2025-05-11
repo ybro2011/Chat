@@ -98,70 +98,73 @@ function Chat({ user, room, socket }: ChatProps) {
     }
   };
 
+  const handleLeave = () => {
+    // Implement the leave group logic
+  };
+
   return (
-    <div className="flex flex-col h-screen bg-black">
-      <div className="p-4 border-b border-[#00ff00] bg-[#0a0a0a]">
-        <div className="text-[#00ff00]">
-          <div className="font-semibold">&gt; Room: {room}</div>
-          <div className="text-sm opacity-75">
-            &gt; Users: {users.join(', ')}
-          </div>
-        </div>
-      </div>
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
-        {messages.map((msg, index) => (
-          <div
-            key={index}
-            className={`flex ${
-              msg.user === user ? 'justify-end' : 'justify-start'
-            }`}
-          >
-            <div
-              className={`max-w-[70%] rounded-lg p-3 ${
-                msg.user === user
-                  ? 'bg-[#003300] text-[#00ff00]'
-                  : msg.user === 'SYSTEM'
-                  ? 'bg-[#0a0a0a] text-[#00ff00] border border-[#00ff00]'
-                  : 'bg-[#0a0a0a] text-[#00ff00] border border-[#00ff00]'
-              }`}
-            >
-              {msg.user !== 'SYSTEM' && (
-                <div className="font-semibold">&gt; {msg.user}</div>
-              )}
-              <div>{msg.text}</div>
-              <div className="text-xs opacity-75 mt-1">[{msg.time}]</div>
+    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-green-50 p-4">
+      <div className="max-w-6xl mx-auto">
+        <div className="bg-white rounded-lg shadow-lg p-6">
+          <div className="flex justify-between items-center mb-6">
+            <div>
+              <h2 className="text-2xl font-semibold text-blue-800">Study Group: {room}</h2>
+              <p className="text-gray-600">Discuss biology topics with your peers</p>
             </div>
+            <button
+              onClick={handleLeave}
+              className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 transition-colors duration-200"
+            >
+              Leave Group
+            </button>
           </div>
-        ))}
-        <div ref={messagesEndRef} />
-      </div>
-      <div className="p-4 border-t border-[#00ff00] bg-black">
-        <form 
-          onSubmit={handleSubmit} 
-          className="flex space-x-4"
-          onClick={(e) => e.stopPropagation()}
-        >
-          <input
-            ref={inputRef}
-            type="text"
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                handleSubmit(e);
-              }
-            }}
-            className="flex-1 bg-[#0a0a0a] text-[#00ff00] rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#00ff00] border border-[#00ff00]"
-            placeholder="Type a message..."
-          />
-          <button
-            type="submit"
-            className="bg-[#003300] text-[#00ff00] px-6 py-2 rounded-lg hover:bg-[#004400] focus:outline-none focus:ring-2 focus:ring-[#00ff00] border border-[#00ff00]"
-          >
-            Send
-          </button>
-        </form>
+
+          <div className="bg-gray-50 rounded-lg p-4 mb-4 h-[60vh] overflow-y-auto">
+            {messages.map((msg, index) => (
+              <div
+                key={index}
+                className={`mb-4 ${
+                  msg.user === user
+                    ? 'text-right'
+                    : 'text-left'
+                }`}
+              >
+                <div
+                  className={`inline-block max-w-[70%] rounded-lg p-3 ${
+                    msg.user === user
+                      ? 'bg-green-600 text-white'
+                      : 'bg-blue-100 text-gray-800'
+                  }`}
+                >
+                  <div className="font-semibold mb-1">
+                    {msg.user === user ? 'You' : msg.user}
+                  </div>
+                  <div>{msg.text}</div>
+                  <div className="text-xs mt-1 opacity-75">
+                    {msg.time}
+                  </div>
+                </div>
+              </div>
+            ))}
+            <div ref={messagesEndRef} />
+          </div>
+
+          <form onSubmit={handleSubmit} className="flex gap-2">
+            <input
+              type="text"
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              className="flex-1 bg-gray-50 text-gray-800 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 border border-green-300"
+              placeholder="Type your message..."
+            />
+            <button
+              type="submit"
+              className="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 transition-colors duration-200"
+            >
+              Send
+            </button>
+          </form>
+        </div>
       </div>
     </div>
   );
