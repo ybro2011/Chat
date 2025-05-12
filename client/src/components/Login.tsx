@@ -19,11 +19,30 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
 
   useEffect(() => {
     // Connect to the server
-    const newSocket = io(process.env.REACT_APP_SERVER_URL || 'http://localhost:10000');
-    setSocket(newSocket);
+    const serverUrl = window.location.hostname === 'localhost' 
+      ? 'http://localhost:10000'
+      : window.location.origin;
+    
+    console.log('Connecting to server at:', serverUrl);
+    const newSocket = io(serverUrl, {
+      transports: ['websocket', 'polling'],
+      reconnectionAttempts: 5,
+      reconnectionDelay: 1000
+    });
+
+    newSocket.on('connect', () => {
+      console.log('Connected to server');
+      setSocket(newSocket);
+    });
+
+    newSocket.on('connect_error', (error) => {
+      console.error('Connection error:', error);
+      setError('Failed to connect to server. Please try again later.');
+    });
 
     // Listen for active rooms updates
     newSocket.on('activeRooms', (rooms: ActiveRoom[]) => {
+      console.log('Received active rooms:', rooms);
       setActiveRooms(rooms);
     });
 
@@ -31,6 +50,7 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
     newSocket.emit('getActiveRooms');
 
     return () => {
+      console.log('Cleaning up socket connection');
       newSocket.close();
     };
   }, []);

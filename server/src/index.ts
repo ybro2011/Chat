@@ -5,7 +5,10 @@ import cors from 'cors';
 import path from 'path';
 
 const app = express();
-app.use(cors());
+app.use(cors({
+  origin: '*',
+  credentials: true
+}));
 
 // Serve static files from the React app
 app.use(express.static(path.join(__dirname, '../../client/dist')));
@@ -13,9 +16,13 @@ app.use(express.static(path.join(__dirname, '../../client/dist')));
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
   cors: {
-    origin: process.env.NODE_ENV === 'production' ? false : "http://localhost:5173",
-    methods: ["GET", "POST"]
-  }
+    origin: '*',
+    methods: ['GET', 'POST'],
+    credentials: true
+  },
+  transports: ['websocket', 'polling'],
+  allowUpgrades: true,
+  allowEIO3: true
 });
 
 interface User {
