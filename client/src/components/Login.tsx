@@ -15,7 +15,6 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
   const [roomCode, setRoomCode] = useState('');
   const [error, setError] = useState('');
   const [activeRooms, setActiveRooms] = useState<ActiveRoom[]>([]);
-  const [socket, setSocket] = useState<any>(null);
 
   useEffect(() => {
     // Connect to the server
@@ -24,34 +23,33 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
       : window.location.origin;
     
     console.log('Connecting to server at:', serverUrl);
-    const newSocket = io(serverUrl, {
+    const socket = io(serverUrl, {
       transports: ['websocket', 'polling'],
       reconnectionAttempts: 5,
       reconnectionDelay: 1000
     });
 
-    newSocket.on('connect', () => {
+    socket.on('connect', () => {
       console.log('Connected to server');
-      setSocket(newSocket);
     });
 
-    newSocket.on('connect_error', (error) => {
+    socket.on('connect_error', (error) => {
       console.error('Connection error:', error);
       setError('Failed to connect to server. Please try again later.');
     });
 
     // Listen for active rooms updates
-    newSocket.on('activeRooms', (rooms: ActiveRoom[]) => {
+    socket.on('activeRooms', (rooms: ActiveRoom[]) => {
       console.log('Received active rooms:', rooms);
       setActiveRooms(rooms);
     });
 
     // Request initial active rooms
-    newSocket.emit('getActiveRooms');
+    socket.emit('getActiveRooms');
 
     return () => {
       console.log('Cleaning up socket connection');
-      newSocket.close();
+      socket.close();
     };
   }, []);
 
