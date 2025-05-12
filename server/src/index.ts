@@ -31,63 +31,91 @@ interface ChatMessage {
   room: string;
 }
 
-interface Room {
-  id: string;
-  users: User[];
+interface Message {
+  user: string;
+  text: string;
+  time: string;
 }
 
-const rooms: Map<string, Room> = new Map();
-const ADMIN_CODE = 'password_123';
+interface Room {
+  users: Set<string>;
+  messages: Message[];
+}
+
+interface ActiveRoom {
+  name: string;
+  userCount: number;
+}
+
+// Track active rooms
+const activeRooms: Map<string, Room> = new Map();
+
+// Function to broadcast active rooms to all clients
+const broadcastActiveRooms = () => {
+  const rooms: ActiveRoom[] = Array.from(activeRooms.entries()).map(([name, room]) => ({
+    name,
+    userCount: room.users.size
+  }));
+  io.emit('activeRooms', rooms);
+};
 
 io.on('connection', (socket) => {
   console.log('User connected:', socket.id);
 
-  socket.on('join', ({ username, roomCode }: { username: string; roomCode: string }) => {
-    if (roomCode === ADMIN_CODE) {
-      // Send list of active rooms to admin
-      const activeRooms = Array.from(rooms.entries()).map(([id, room]) => ({
-        id,
-        userCount: room.users.length,
-        users: room.users.map(u => u.username)
-      }));
-      socket.emit('adminRooms', activeRooms);
-      return;
-    }
+  // Handle getActiveRooms request
+  socket.on('getActiveRooms', () => {
+    const rooms: ActiveRoom[] = Array.from(activeRooms.entries()).map(([name, room]) => ({
+      name,
+      userCount: room.users.size
+    }));
+    socket.emit('activeRooms', rooms);
+  });
+
+  socket.on('join', (roomCode: string | undefined, username: string) => {
+    const actualRoomCode = roomCode || 'main';
+    console.log(`Join request - Room: ${actualRoomCode}, User: ${username}`);
 
     // Create room if it doesn't exist
-    if (!rooms.has(roomCode)) {
-      rooms.set(roomCode, { id: roomCode, users: [] });
+    if (!activeRooms.has(actualRoomCode)) {
+      activeRooms.set(actualRoomCode, { users: new Set(), messages: [] });
     }
 
-    const room = rooms.get(roomCode)!;
-    const user = { id: socket.id, username, room: roomCode };
-    room.users.push(user);
-    socket.join(roomCode);
+    const room = activeRooms.get(actualRoomCode)!;
+    room.users.add(username);
+    socket.join(actualRoomCode);
+    socket.data.username = username;
+    socket.data.room = actualRoomCode;
+
+    // Broadcast updated active rooms
+    broadcastActiveRooms();
+
+    if (actualRoomCode === 'main') {
+      // Send list of active rooms to admin
+      const adminRooms: ActiveRoom[] = Array.from(activeRooms.entries()).map(([name, room]) => ({
+        name,
+        userCount: room.users.size
+      }));
+      socket.emit('adminRooms', adminRooms);
+    }
 
     // Notify room members
-    io.to(roomCode).emit('userJoined', { 
+    io.to(actualRoomCode).emit('userJoined', { 
       message: `${username} has joined the chat`,
       time: new Date().toLocaleTimeString(),
-      users: room.users.map(u => u.username)
+      users: Array.from(room.users)
     });
 
     // Notify admin if connected
-    io.emit('roomUpdate', {
-      rooms: Array.from(rooms.entries()).map(([id, room]) => ({
-        id,
-        userCount: room.users.length,
-        users: room.users.map(u => u.username)
-      }))
-    });
+    broadcastActiveRooms();
   });
 
   socket.on('message', (message: ChatMessage) => {
-    const room = rooms.get(message.room);
+    const room = activeRooms.get(message.room);
     if (room) {
-      const user = room.users.find(u => u.id === socket.id);
+      const user = Array.from(room.users).find(u => u === message.user);
       if (user) {
         const chatMessage: ChatMessage = {
-          user: user.username,
+          user: message.user,
           text: message.text,
           time: new Date().toLocaleTimeString(),
           room: message.room
@@ -98,69 +126,60 @@ io.on('connection', (socket) => {
   });
 
   socket.on('kickUser', ({ roomCode, username }: { roomCode: string; username: string }) => {
-    const room = rooms.get(roomCode);
+    const room = activeRooms.get(roomCode);
     if (room) {
-      const userToKick = room.users.find(u => u.username === username);
-      if (userToKick) {
-        // Find the socket of the user to kick
-        const userSocket = io.sockets.sockets.get(userToKick.id);
-        if (userSocket) {
-          // Notify the user they've been kicked
-          userSocket.emit('kicked', { message: 'You have been kicked from the room' });
-          // Remove user from room
-          room.users = room.users.filter(u => u.id !== userToKick.id);
-          // Notify remaining users
-          io.to(roomCode).emit('userLeft', {
-            message: `${username} has been kicked from the chat`,
-            time: new Date().toLocaleTimeString(),
-            users: room.users.map(u => u.username)
-          });
-          // Remove room if empty
-          if (room.users.length === 0) {
-            rooms.delete(roomCode);
-          }
-          // Notify admin
-          io.emit('roomUpdate', {
-            rooms: Array.from(rooms.entries()).map(([id, room]) => ({
-              id,
-              userCount: room.users.length,
-              users: room.users.map(u => u.username)
-            }))
-          });
+      if (room.users.has(username)) {
+        // Notify the user they've been kicked
+        io.to(roomCode).emit('kicked', { message: 'You have been kicked from the room' });
+        // Remove user from room
+        room.users.delete(username);
+        // Notify remaining users
+        io.to(roomCode).emit('userLeft', {
+          message: `${username} has been kicked from the chat`,
+          time: new Date().toLocaleTimeString(),
+          users: Array.from(room.users)
+        });
+        // Remove room if empty
+        if (room.users.size === 0) {
+          activeRooms.delete(roomCode);
         }
+        // Notify admin
+        broadcastActiveRooms();
       }
     }
   });
 
   socket.on('disconnect', () => {
-    // Find user in all rooms
-    for (const [roomCode, room] of rooms.entries()) {
-      const userIndex = room.users.findIndex(u => u.id === socket.id);
-      if (userIndex !== -1) {
-        const username = room.users[userIndex].username;
-        room.users.splice(userIndex, 1);
-        
-        // Remove room if empty
-        if (room.users.length === 0) {
-          rooms.delete(roomCode);
-        } else {
-          io.to(roomCode).emit('userLeft', { 
-            message: `${username} has left the chat`,
-            time: new Date().toLocaleTimeString(),
-            users: room.users.map(u => u.username)
-          });
-        }
+    console.log('User disconnected:', socket.id);
+    const username = socket.data.username;
+    const room = socket.data.room;
 
-        // Notify admin if connected
-        io.emit('roomUpdate', {
-          rooms: Array.from(rooms.entries()).map(([id, room]) => ({
-            id,
-            userCount: room.users.length,
-            users: room.users.map(u => u.username)
-          }))
+    if (username && room && activeRooms.has(room)) {
+      const roomData = activeRooms.get(room)!;
+      roomData.users.delete(username);
+      
+      // Remove room if empty
+      if (roomData.users.size === 0) {
+        activeRooms.delete(room);
+      } else {
+        io.to(room).emit('userLeft', { 
+          message: `${username} has left the chat`,
+          time: new Date().toLocaleTimeString(),
+          users: Array.from(roomData.users)
         });
-        break;
       }
+      
+      // Broadcast updated active rooms
+      broadcastActiveRooms();
+      
+      // Notify admin if connected
+      io.emit('roomUpdate', {
+        rooms: Array.from(activeRooms.entries()).map(([id, room]) => ({
+          id,
+          userCount: room.users.size,
+          users: Array.from(room.users)
+        }))
+      });
     }
   });
 });

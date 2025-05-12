@@ -1,13 +1,39 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import io from 'socket.io-client';
 
 interface LoginProps {
   onLogin: (username: string, roomCode: string) => void;
+}
+
+interface ActiveRoom {
+  name: string;
+  userCount: number;
 }
 
 const Login: React.FC<LoginProps> = ({ onLogin }) => {
   const [username, setUsername] = useState('');
   const [roomCode, setRoomCode] = useState('');
   const [error, setError] = useState('');
+  const [activeRooms, setActiveRooms] = useState<ActiveRoom[]>([]);
+  const [socket, setSocket] = useState<any>(null);
+
+  useEffect(() => {
+    // Connect to the server
+    const newSocket = io(process.env.REACT_APP_SERVER_URL || 'http://localhost:10000');
+    setSocket(newSocket);
+
+    // Listen for active rooms updates
+    newSocket.on('activeRooms', (rooms: ActiveRoom[]) => {
+      setActiveRooms(rooms);
+    });
+
+    // Request initial active rooms
+    newSocket.emit('getActiveRooms');
+
+    return () => {
+      newSocket.close();
+    };
+  }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -226,6 +252,32 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
           <p>© 2024 GCSE Biology Revision Guide</p>
           <p className="mt-1">For educational purposes only</p>
           <p className="mt-1">Based on AQA GCSE Biology Specification (8461)</p>
+        </div>
+
+        {/* Active Study Groups Footer */}
+        <div className="mt-8 border-t border-gray-200 pt-6">
+          <h3 className="text-lg font-semibold text-blue-800 mb-4">Active Study Groups</h3>
+          {activeRooms.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              {activeRooms.map((room) => (
+                <div 
+                  key={room.name}
+                  className="bg-white rounded-lg shadow p-4 hover:shadow-md transition-shadow duration-200 cursor-pointer"
+                  onClick={() => setRoomCode(room.name)}
+                >
+                  <div className="flex justify-between items-center">
+                    <span className="font-medium text-blue-800">{room.name}</span>
+                    <span className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">
+                      {room.userCount} {room.userCount === 1 ? 'student' : 'students'}
+                    </span>
+                  </div>
+                  <p className="text-sm text-gray-500 mt-1">Click to join</p>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="text-gray-500 italic">No active study groups at the moment</p>
+          )}
         </div>
       </div>
     </div>
