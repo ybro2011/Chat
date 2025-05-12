@@ -110,6 +110,7 @@ function Chat({ user, room, socket }: ChatProps) {
             <div>
               <h2 className="text-2xl font-semibold text-blue-800">Study Group: {room}</h2>
               <p className="text-gray-600">Discuss biology topics with your peers</p>
+              <p className="text-sm text-gray-500 mt-1">Active members: {users.join(', ')}</p>
             </div>
             <button
               onClick={handleLeave}
