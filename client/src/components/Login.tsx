@@ -24,25 +24,95 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-blue-800 mb-2">GCSE Biology Revision</h1>
           <p className="text-gray-600">AQA Specification 8461</p>
+          <p className="text-sm text-gray-500 mt-2">Exam Board: AQA | Course Code: 8461 | Paper 1 & 2</p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+          <div className="bg-white rounded-lg shadow-lg p-6">
+            <h2 className="text-2xl font-semibold text-blue-800 mb-4">Topic 1: Cell Biology</h2>
+            <div className="space-y-4">
+              <div className="border-l-4 border-green-500 pl-4">
+                <h3 className="font-semibold text-blue-800">1.1 Cell Structure</h3>
+                <p className="text-gray-600">Eukaryotic and prokaryotic cells, cell specialisation, and microscopy</p>
+                <ul className="text-sm text-gray-500 mt-2 list-disc list-inside">
+                  <li>Animal and plant cells</li>
+                  <li>Bacterial cells</li>
+                  <li>Microscopy techniques</li>
+                </ul>
+              </div>
+              <div className="border-l-4 border-green-500 pl-4">
+                <h3 className="font-semibold text-blue-800">1.2 Cell Division</h3>
+                <p className="text-gray-600">Chromosomes, mitosis, and the cell cycle</p>
+                <ul className="text-sm text-gray-500 mt-2 list-disc list-inside">
+                  <li>Mitosis stages</li>
+                  <li>Cell cycle phases</li>
+                  <li>Stem cells</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-lg shadow-lg p-6">
+            <h2 className="text-2xl font-semibold text-blue-800 mb-4">Topic 2: Organisation</h2>
+            <div className="space-y-4">
+              <div className="border-l-4 border-green-500 pl-4">
+                <h3 className="font-semibold text-blue-800">2.1 Principles of Organisation</h3>
+                <p className="text-gray-600">Cells, tissues, organs, and organ systems</p>
+                <ul className="text-sm text-gray-500 mt-2 list-disc list-inside">
+                  <li>Levels of organisation</li>
+                  <li>Digestive system</li>
+                  <li>Enzymes</li>
+                </ul>
+              </div>
+              <div className="border-l-4 border-green-500 pl-4">
+                <h3 className="font-semibold text-blue-800">2.2 Plant Tissues</h3>
+                <p className="text-gray-600">Plant tissues, organs, and transport systems</p>
+                <ul className="text-sm text-gray-500 mt-2 list-disc list-inside">
+                  <li>Leaf structure</li>
+                  <li>Transpiration</li>
+                  <li>Xylem and phloem</li>
+                </ul>
+              </div>
+            </div>
+          </div>
         </div>
 
         <div className="bg-white rounded-lg shadow-lg p-6 mb-8">
-          <h2 className="text-2xl font-semibold text-blue-800 mb-4">Topic 1: Cell Biology</h2>
-          <div className="space-y-4">
-            <div className="border-l-4 border-green-500 pl-4">
-              <h3 className="font-semibold text-blue-800">1.1 Cell Structure</h3>
-              <p className="text-gray-600">Eukaryotic and prokaryotic cells, cell specialisation, and microscopy</p>
+          <h2 className="text-2xl font-semibold text-blue-800 mb-4">Exam Tips</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="bg-blue-50 p-4 rounded-lg">
+              <h3 className="font-semibold text-blue-800 mb-2">Command Words</h3>
+              <ul className="text-sm text-gray-600 space-y-1">
+                <li>• Describe: Give details</li>
+                <li>• Explain: Give reasons</li>
+                <li>• Compare: Identify similarities</li>
+                <li>• Evaluate: Make a judgement</li>
+              </ul>
             </div>
-            <div className="border-l-4 border-green-500 pl-4">
-              <h3 className="font-semibold text-blue-800">1.2 Cell Division</h3>
-              <p className="text-gray-600">Chromosomes, mitosis, and the cell cycle</p>
+            <div className="bg-green-50 p-4 rounded-lg">
+              <h3 className="font-semibold text-green-800 mb-2">Practical Skills</h3>
+              <ul className="text-sm text-gray-600 space-y-1">
+                <li>• Required practicals</li>
+                <li>• Scientific methods</li>
+                <li>• Data analysis</li>
+                <li>• Graph drawing</li>
+              </ul>
+            </div>
+            <div className="bg-purple-50 p-4 rounded-lg">
+              <h3 className="font-semibold text-purple-800 mb-2">Revision Strategy</h3>
+              <ul className="text-sm text-gray-600 space-y-1">
+                <li>• Past papers</li>
+                <li>• Mind maps</li>
+                <li>• Flashcards</li>
+                <li>• Group study</li>
+              </ul>
             </div>
           </div>
         </div>
 
         <div className="bg-white rounded-lg shadow-lg p-6">
           <h2 className="text-2xl font-semibold text-blue-800 mb-4">Study Group Access</h2>
-          <p className="text-gray-600 mb-4">Enter your details to join the study group:</p>
+          <p className="text-gray-600 mb-4">Join a study group to discuss biology topics and prepare for your exams:</p>
           
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
@@ -90,6 +160,7 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
         <div className="mt-8 text-center text-sm text-gray-600">
           <p>© 2024 GCSE Biology Revision Guide</p>
           <p className="mt-1">For educational purposes only</p>
+          <p className="mt-1">Based on AQA GCSE Biology Specification (8461)</p>
         </div>
       </div>
     </div>
