@@ -78,6 +78,71 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
         </div>
 
         <div className="bg-white rounded-lg shadow-lg p-6 mb-8">
+          <h2 className="text-2xl font-semibold text-blue-800 mb-4">Past Papers & Resources</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-4">
+              <div className="border-l-4 border-blue-500 pl-4">
+                <h3 className="font-semibold text-blue-800">Paper 1</h3>
+                <p className="text-gray-600">Topics: Cell Biology, Organisation, Infection & Response, Bioenergetics</p>
+                <div className="mt-2 space-y-2">
+                  <div className="bg-gray-50 p-3 rounded-lg">
+                    <p className="text-sm font-medium text-gray-700">2023 Papers</p>
+                    <p className="text-sm text-gray-500 mt-1">Links coming soon...</p>
+                  </div>
+                  <div className="bg-gray-50 p-3 rounded-lg">
+                    <p className="text-sm font-medium text-gray-700">2022 Papers</p>
+                    <p className="text-sm text-gray-500 mt-1">Links coming soon...</p>
+                  </div>
+                  <div className="bg-gray-50 p-3 rounded-lg">
+                    <p className="text-sm font-medium text-gray-700">2021 Papers</p>
+                    <p className="text-sm text-gray-500 mt-1">Links coming soon...</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <div className="border-l-4 border-green-500 pl-4">
+                <h3 className="font-semibold text-blue-800">Paper 2</h3>
+                <p className="text-gray-600">Topics: Homeostasis, Inheritance, Ecology</p>
+                <div className="mt-2 space-y-2">
+                  <div className="bg-gray-50 p-3 rounded-lg">
+                    <p className="text-sm font-medium text-gray-700">2023 Papers</p>
+                    <p className="text-sm text-gray-500 mt-1">Links coming soon...</p>
+                  </div>
+                  <div className="bg-gray-50 p-3 rounded-lg">
+                    <p className="text-sm font-medium text-gray-700">2022 Papers</p>
+                    <p className="text-sm text-gray-500 mt-1">Links coming soon...</p>
+                  </div>
+                  <div className="bg-gray-50 p-3 rounded-lg">
+                    <p className="text-sm font-medium text-gray-700">2021 Papers</p>
+                    <p className="text-sm text-gray-500 mt-1">Links coming soon...</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-6 p-4 bg-blue-50 rounded-lg">
+            <h3 className="font-semibold text-blue-800 mb-2">Additional Resources</h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="bg-white p-3 rounded-lg shadow-sm">
+                <p className="text-sm font-medium text-gray-700">Mark Schemes</p>
+                <p className="text-sm text-gray-500 mt-1">Coming soon...</p>
+              </div>
+              <div className="bg-white p-3 rounded-lg shadow-sm">
+                <p className="text-sm font-medium text-gray-700">Examiner Reports</p>
+                <p className="text-sm text-gray-500 mt-1">Coming soon...</p>
+              </div>
+              <div className="bg-white p-3 rounded-lg shadow-sm">
+                <p className="text-sm font-medium text-gray-700">Practice Questions</p>
+                <p className="text-sm text-gray-500 mt-1">Coming soon...</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white rounded-lg shadow-lg p-6 mb-8">
           <h2 className="text-2xl font-semibold text-blue-800 mb-4">Exam Tips</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="bg-blue-50 p-4 rounded-lg">
