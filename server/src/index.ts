@@ -78,25 +78,24 @@ io.on('connection', (socket) => {
     socket.emit('activeRooms', rooms);
   });
 
-  socket.on('join', (roomCode: string | undefined, username: string) => {
-    const actualRoomCode = roomCode || 'main';
-    console.log(`Join request - Room: ${actualRoomCode}, User: ${username}`);
+  socket.on('join', ({ username, roomCode }: { username: string; roomCode: string }) => {
+    console.log(`Join request - Room: ${roomCode}, User: ${username}`);
 
     // Create room if it doesn't exist
-    if (!activeRooms.has(actualRoomCode)) {
-      activeRooms.set(actualRoomCode, { users: new Set(), messages: [] });
+    if (!activeRooms.has(roomCode)) {
+      activeRooms.set(roomCode, { users: new Set(), messages: [] });
     }
 
-    const room = activeRooms.get(actualRoomCode)!;
+    const room = activeRooms.get(roomCode)!;
     room.users.add(username);
-    socket.join(actualRoomCode);
+    socket.join(roomCode);
     socket.data.username = username;
-    socket.data.room = actualRoomCode;
+    socket.data.room = roomCode;
 
     // Broadcast updated active rooms
     broadcastActiveRooms();
 
-    if (actualRoomCode === 'main') {
+    if (roomCode === 'main') {
       // Send list of active rooms to admin
       const adminRooms: ActiveRoom[] = Array.from(activeRooms.entries()).map(([name, room]) => ({
         name,
@@ -106,7 +105,7 @@ io.on('connection', (socket) => {
     }
 
     // Notify room members
-    io.to(actualRoomCode).emit('userJoined', { 
+    io.to(roomCode).emit('userJoined', { 
       message: `${username} has joined the chat`,
       time: new Date().toLocaleTimeString(),
       users: Array.from(room.users)

@@ -29,17 +29,14 @@ function Chat({ user, room, socket }: ChatProps) {
     socket.emit('join', { username: user, roomCode: room });
 
     const handleMessage = (msg: Message) => {
+      console.log('Received message:', msg);
       if (msg.room === room) {
-        setMessages(prev => [...prev, {
-          user: msg.user,
-          text: msg.text,
-          time: msg.time,
-          room: msg.room
-        }]);
+        setMessages(prev => [...prev, msg]);
       }
     };
 
     const handleUserJoined = (data: { message: string; time: string; users: string[] }) => {
+      console.log('User joined:', data);
       setMessages(prev => [...prev, { 
         user: 'SYSTEM', 
         text: data.message, 
@@ -50,6 +47,7 @@ function Chat({ user, room, socket }: ChatProps) {
     };
 
     const handleUserLeft = (data: { message: string; time: string; users: string[] }) => {
+      console.log('User left:', data);
       setMessages(prev => [...prev, { 
         user: 'SYSTEM', 
         text: data.message, 
@@ -88,6 +86,7 @@ function Chat({ user, room, socket }: ChatProps) {
     };
 
     try {
+      console.log('Sending message:', newMessage);
       socket.emit('message', newMessage);
       setMessage('');
       if (inputRef.current) {

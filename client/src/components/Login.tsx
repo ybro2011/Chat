@@ -224,15 +224,15 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
           <p className="text-gray-600 mb-4">Join a study group to discuss biology topics and prepare for your exams:</p>
           
           <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
+          <div>
               <label htmlFor="username" className="block text-blue-800 font-semibold mb-2">
                 Student Name
-              </label>
-              <input
-                type="text"
-                id="username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
+            </label>
+            <input
+              type="text"
+              id="username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
                 className="w-full bg-gray-50 text-gray-800 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 border border-green-300"
                 placeholder="Enter your name"
                 required
@@ -249,21 +249,21 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
                 onChange={(e) => setRoomCode(e.target.value)}
                 className="w-full bg-gray-50 text-gray-800 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 border border-green-300"
                 placeholder="Enter study group code"
-                required
-              />
-            </div>
+              required
+            />
+          </div>
 
             {error && (
               <p className="text-red-500 text-sm">{error}</p>
             )}
 
-            <button
-              type="submit"
+          <button
+            type="submit"
               className="w-full bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 transition-colors duration-200"
-            >
+          >
               Join Study Group
-            </button>
-          </form>
+          </button>
+        </form>
         </div>
 
         <div className="mt-8 text-center text-sm text-gray-600">
