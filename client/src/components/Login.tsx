@@ -1,13 +1,63 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import io from 'socket.io-client';
 
 interface LoginProps {
   onLogin: (username: string, roomCode: string) => void;
+}
+
+interface ActiveRoom {
+  name: string;
+  userCount: number;
 }
 
 const Login: React.FC<LoginProps> = ({ onLogin }) => {
   const [username, setUsername] = useState('');
   const [roomCode, setRoomCode] = useState('');
   const [error, setError] = useState('');
+  const [activeRooms, setActiveRooms] = useState<ActiveRoom[]>([]);
+
+  useEffect(() => {
+    // Connect to the server
+    const serverUrl = window.location.hostname === 'localhost' 
+      ? 'http://localhost:10000'
+      : window.location.origin;
+    
+    console.log('Connecting to server at:', serverUrl);
+    const socket = io(serverUrl, {
+      transports: ['websocket', 'polling'],
+      reconnectionAttempts: 5,
+      reconnectionDelay: 1000
+    });
+
+    socket.on('connect', () => {
+      console.log('Connected to server');
+      setError(''); // Clear any previous errors on successful connection
+    });
+
+    socket.on('connect_error', (error) => {
+      console.error('Connection error:', error);
+      setError('Failed to connect to server. Please try again later.');
+    });
+
+    socket.on('error', (data: { message: string }) => {
+      console.error('Server error:', data.message);
+      setError(data.message);
+    });
+
+    // Listen for active rooms updates
+    socket.on('activeRooms', (rooms: ActiveRoom[]) => {
+      console.log('Received active rooms:', rooms);
+      setActiveRooms(rooms);
+    });
+
+    // Request initial active rooms
+    socket.emit('getActiveRooms');
+
+    return () => {
+      console.log('Cleaning up socket connection');
+      socket.close();
+    };
+  }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -145,7 +195,9 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
             </div>
 
             {error && (
-              <p className="text-red-500 text-sm">{error}</p>
+              <div className="p-3 bg-red-100 text-red-700 rounded-lg">
+                {error}
+              </div>
             )}
 
             <button

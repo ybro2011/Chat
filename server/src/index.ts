@@ -36,13 +36,21 @@ interface Room {
   users: User[];
 }
 
+// Track active rooms and usernames
 const rooms: Map<string, Room> = new Map();
+const activeUsernames: Set<string> = new Set();
 const ADMIN_CODE = 'password_123';
 
 io.on('connection', (socket) => {
   console.log('User connected:', socket.id);
 
-  socket.on('join', ({ username, roomCode }: { username: string; roomCode: string }) => {
+  socket.on('join', (roomCode: string, username: string) => {
+    // Check if username is already taken
+    if (activeUsernames.has(username)) {
+      socket.emit('error', { message: 'Username is already taken. Please choose another one.' });
+      return;
+    }
+
     if (roomCode === ADMIN_CODE) {
       // Send list of active rooms to admin
       const activeRooms = Array.from(rooms.entries()).map(([id, room]) => ({
@@ -62,6 +70,7 @@ io.on('connection', (socket) => {
     const room = rooms.get(roomCode)!;
     const user = { id: socket.id, username, room: roomCode };
     room.users.push(user);
+    activeUsernames.add(username);
     socket.join(roomCode);
 
     // Notify room members
@@ -139,6 +148,7 @@ io.on('connection', (socket) => {
       if (userIndex !== -1) {
         const username = room.users[userIndex].username;
         room.users.splice(userIndex, 1);
+        activeUsernames.delete(username);
         
         // Remove room if empty
         if (room.users.length === 0) {
