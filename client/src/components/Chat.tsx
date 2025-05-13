@@ -18,6 +18,7 @@ function Chat({ user, room, socket }: ChatProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [message, setMessage] = useState('');
   const [users, setUsers] = useState<string[]>([]);
+  const [error, setError] = useState<string>('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -29,17 +30,14 @@ function Chat({ user, room, socket }: ChatProps) {
     socket.emit('join', { username: user, roomCode: room });
 
     const handleMessage = (msg: Message) => {
+      console.log('Received message:', msg);
       if (msg.room === room) {
-        setMessages(prev => [...prev, {
-          user: msg.user,
-          text: msg.text,
-          time: msg.time,
-          room: msg.room
-        }]);
+        setMessages(prev => [...prev, msg]);
       }
     };
 
     const handleUserJoined = (data: { message: string; time: string; users: string[] }) => {
+      console.log('User joined:', data);
       setMessages(prev => [...prev, { 
         user: 'SYSTEM', 
         text: data.message, 
@@ -50,6 +48,7 @@ function Chat({ user, room, socket }: ChatProps) {
     };
 
     const handleUserLeft = (data: { message: string; time: string; users: string[] }) => {
+      console.log('User left:', data);
       setMessages(prev => [...prev, { 
         user: 'SYSTEM', 
         text: data.message, 
@@ -59,14 +58,30 @@ function Chat({ user, room, socket }: ChatProps) {
       setUsers(data.users);
     };
 
+    const handleError = (data: { message: string }) => {
+      console.error('Error:', data.message);
+      setError(data.message);
+    };
+
+    const handleKicked = (data: { message: string }) => {
+      console.log('Kicked:', data.message);
+      setError(data.message);
+      // Redirect to login or handle kicked state
+      window.location.href = '/';
+    };
+
     socket.on('message', handleMessage);
     socket.on('userJoined', handleUserJoined);
     socket.on('userLeft', handleUserLeft);
+    socket.on('error', handleError);
+    socket.on('kicked', handleKicked);
 
     return () => {
       socket.off('message', handleMessage);
       socket.off('userJoined', handleUserJoined);
       socket.off('userLeft', handleUserLeft);
+      socket.off('error', handleError);
+      socket.off('kicked', handleKicked);
     };
   }, [socket, user, room]);
 
@@ -88,6 +103,7 @@ function Chat({ user, room, socket }: ChatProps) {
     };
 
     try {
+      console.log('Sending message:', newMessage);
       socket.emit('message', newMessage);
       setMessage('');
       if (inputRef.current) {
@@ -99,13 +115,21 @@ function Chat({ user, room, socket }: ChatProps) {
   };
 
   const handleLeave = () => {
-    // Implement the leave group logic
+    if (window.confirm('Are you sure you want to leave this study group?')) {
+      socket.emit('leaveGroup');
+      window.location.href = '/';
+    }
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-green-50 p-4">
       <div className="max-w-6xl mx-auto">
         <div className="bg-white rounded-lg shadow-lg p-6">
+          {error && (
+            <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-lg">
+              {error}
+            </div>
+          )}
           <div className="flex justify-between items-center mb-6">
             <div>
               <h2 className="text-2xl font-semibold text-blue-800">Study Group: {room}</h2>
