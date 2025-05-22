@@ -63,58 +63,58 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-green-50 p-4">
+    <div className="min-h-screen bg-gradient-to-b from-purple-50 to-indigo-50 p-4">
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-blue-800 mb-2">GCSE Biology Revision</h1>
-          <p className="text-gray-600">AQA Specification 8461</p>
-          <p className="text-sm text-gray-500 mt-2">Exam Board: AQA | Course Code: 8461 | Paper 1 & 2</p>
+          <h1 className="text-4xl font-bold text-purple-800 mb-2">GCSE Chemistry Revision</h1>
+          <p className="text-gray-600">AQA Specification 8462</p>
+          <p className="text-sm text-gray-500 mt-2">Exam Board: AQA | Course Code: 8462 | Paper 1 & 2</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
           <div className="bg-white rounded-lg shadow-lg p-6">
-            <h2 className="text-2xl font-semibold text-blue-800 mb-4">Topic 1: Cell Biology</h2>
+            <h2 className="text-2xl font-semibold text-purple-800 mb-4">Topic 1: Atomic Structure</h2>
             <div className="space-y-4">
-              <div className="border-l-4 border-green-500 pl-4">
-                <h3 className="font-semibold text-blue-800">1.1 Cell Structure</h3>
-                <p className="text-gray-600">Eukaryotic and prokaryotic cells, cell specialisation, and microscopy</p>
+              <div className="border-l-4 border-indigo-500 pl-4">
+                <h3 className="font-semibold text-purple-800">1.1 Atoms and Elements</h3>
+                <p className="text-gray-600">Atomic structure, elements, and the periodic table</p>
                 <ul className="text-sm text-gray-500 mt-2 list-disc list-inside">
-                  <li>Animal and plant cells</li>
-                  <li>Bacterial cells</li>
-                  <li>Microscopy techniques</li>
+                  <li>Atomic models</li>
+                  <li>Elements and compounds</li>
+                  <li>Periodic table trends</li>
                 </ul>
               </div>
-              <div className="border-l-4 border-green-500 pl-4">
-                <h3 className="font-semibold text-blue-800">1.2 Cell Division</h3>
-                <p className="text-gray-600">Chromosomes, mitosis, and the cell cycle</p>
+              <div className="border-l-4 border-indigo-500 pl-4">
+                <h3 className="font-semibold text-purple-800">1.2 Chemical Bonding</h3>
+                <p className="text-gray-600">Ionic, covalent, and metallic bonding</p>
                 <ul className="text-sm text-gray-500 mt-2 list-disc list-inside">
-                  <li>Mitosis stages</li>
-                  <li>Cell cycle phases</li>
-                  <li>Stem cells</li>
+                  <li>Ionic compounds</li>
+                  <li>Covalent molecules</li>
+                  <li>Metallic structures</li>
                 </ul>
               </div>
             </div>
           </div>
 
           <div className="bg-white rounded-lg shadow-lg p-6">
-            <h2 className="text-2xl font-semibold text-blue-800 mb-4">Topic 2: Organisation</h2>
+            <h2 className="text-2xl font-semibold text-purple-800 mb-4">Topic 2: Chemical Changes</h2>
             <div className="space-y-4">
-              <div className="border-l-4 border-green-500 pl-4">
-                <h3 className="font-semibold text-blue-800">2.1 Principles of Organisation</h3>
-                <p className="text-gray-600">Cells, tissues, organs, and organ systems</p>
+              <div className="border-l-4 border-indigo-500 pl-4">
+                <h3 className="font-semibold text-purple-800">2.1 Chemical Reactions</h3>
+                <p className="text-gray-600">Types of reactions and energy changes</p>
                 <ul className="text-sm text-gray-500 mt-2 list-disc list-inside">
-                  <li>Levels of organisation</li>
-                  <li>Digestive system</li>
-                  <li>Enzymes</li>
+                  <li>Exothermic and endothermic</li>
+                  <li>Acids and bases</li>
+                  <li>Redox reactions</li>
                 </ul>
               </div>
-              <div className="border-l-4 border-green-500 pl-4">
-                <h3 className="font-semibold text-blue-800">2.2 Plant Tissues</h3>
-                <p className="text-gray-600">Plant tissues, organs, and transport systems</p>
+              <div className="border-l-4 border-indigo-500 pl-4">
+                <h3 className="font-semibold text-purple-800">2.2 Electrolysis</h3>
+                <p className="text-gray-600">Electrolysis and its applications</p>
                 <ul className="text-sm text-gray-500 mt-2 list-disc list-inside">
-                  <li>Leaf structure</li>
-                  <li>Transpiration</li>
-                  <li>Xylem and phloem</li>
+                  <li>Electrolysis of solutions</li>
+                  <li>Extraction of metals</li>
+                  <li>Industrial applications</li>
                 </ul>
               </div>
             </div>
@@ -122,12 +122,12 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
         </div>
 
         <div className="bg-white rounded-lg shadow-lg p-6 mb-8">
-          <h2 className="text-2xl font-semibold text-blue-800 mb-4">Past Papers & Resources</h2>
+          <h2 className="text-2xl font-semibold text-purple-800 mb-4">Past Papers & Resources</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-4">
-              <div className="border-l-4 border-blue-500 pl-4">
-                <h3 className="font-semibold text-blue-800">Paper 1</h3>
-                <p className="text-gray-600">Topics: Cell Biology, Organisation, Infection & Response, Bioenergetics</p>
+              <div className="border-l-4 border-purple-500 pl-4">
+                <h3 className="font-semibold text-purple-800">Paper 1</h3>
+                <p className="text-gray-600">Topics: Atomic Structure, Bonding, Chemical Changes, Energy Changes</p>
                 <div className="mt-2 space-y-2">
                   <div className="bg-gray-50 p-3 rounded-lg">
                     <p className="text-sm font-medium text-gray-700">2023 Papers</p>
@@ -146,9 +146,9 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
             </div>
 
             <div className="space-y-4">
-              <div className="border-l-4 border-green-500 pl-4">
-                <h3 className="font-semibold text-blue-800">Paper 2</h3>
-                <p className="text-gray-600">Topics: Homeostasis, Inheritance, Ecology</p>
+              <div className="border-l-4 border-indigo-500 pl-4">
+                <h3 className="font-semibold text-purple-800">Paper 2</h3>
+                <p className="text-gray-600">Topics: Rates of Reaction, Organic Chemistry, Chemical Analysis</p>
                 <div className="mt-2 space-y-2">
                   <div className="bg-gray-50 p-3 rounded-lg">
                     <p className="text-sm font-medium text-gray-700">2023 Papers</p>
@@ -167,8 +167,8 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
             </div>
           </div>
 
-          <div className="mt-6 p-4 bg-blue-50 rounded-lg">
-            <h3 className="font-semibold text-blue-800 mb-2">Additional Resources</h3>
+          <div className="mt-6 p-4 bg-purple-50 rounded-lg">
+            <h3 className="font-semibold text-purple-800 mb-2">Additional Resources</h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="bg-white p-3 rounded-lg shadow-sm">
                 <p className="text-sm font-medium text-gray-700">Mark Schemes</p>
@@ -187,31 +187,31 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
         </div>
 
         <div className="bg-white rounded-lg shadow-lg p-6 mb-8">
-          <h2 className="text-2xl font-semibold text-blue-800 mb-4">Exam Tips</h2>
+          <h2 className="text-2xl font-semibold text-purple-800 mb-4">Exam Tips</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="bg-blue-50 p-4 rounded-lg">
-              <h3 className="font-semibold text-blue-800 mb-2">Command Words</h3>
+            <div className="bg-purple-50 p-4 rounded-lg">
+              <h3 className="font-semibold text-purple-800 mb-2">Command Words</h3>
               <ul className="text-sm text-gray-600 space-y-1">
-                <li>• Describe: Give details</li>
+                <li>• Calculate: Work out the answer</li>
                 <li>• Explain: Give reasons</li>
                 <li>• Compare: Identify similarities</li>
                 <li>• Evaluate: Make a judgement</li>
               </ul>
             </div>
-            <div className="bg-green-50 p-4 rounded-lg">
-              <h3 className="font-semibold text-green-800 mb-2">Practical Skills</h3>
+            <div className="bg-indigo-50 p-4 rounded-lg">
+              <h3 className="font-semibold text-indigo-800 mb-2">Practical Skills</h3>
               <ul className="text-sm text-gray-600 space-y-1">
                 <li>• Required practicals</li>
-                <li>• Scientific methods</li>
-                <li>• Data analysis</li>
-                <li>• Graph drawing</li>
+                <li>• Chemical analysis</li>
+                <li>• Safety procedures</li>
+                <li>• Data handling</li>
               </ul>
             </div>
             <div className="bg-purple-50 p-4 rounded-lg">
               <h3 className="font-semibold text-purple-800 mb-2">Revision Strategy</h3>
               <ul className="text-sm text-gray-600 space-y-1">
                 <li>• Past papers</li>
-                <li>• Mind maps</li>
+                <li>• Chemical equations</li>
                 <li>• Flashcards</li>
                 <li>• Group study</li>
               </ul>
@@ -220,26 +220,26 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
         </div>
 
         <div className="bg-white rounded-lg shadow-lg p-6">
-          <h2 className="text-2xl font-semibold text-blue-800 mb-4">Study Group Access</h2>
-          <p className="text-gray-600 mb-4">Join a study group to discuss biology topics and prepare for your exams:</p>
+          <h2 className="text-2xl font-semibold text-purple-800 mb-4">Study Group Access</h2>
+          <p className="text-gray-600 mb-4">Join a study group to discuss chemistry topics and prepare for your exams:</p>
           
           <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-              <label htmlFor="username" className="block text-blue-800 font-semibold mb-2">
+            <div>
+              <label htmlFor="username" className="block text-purple-800 font-semibold mb-2">
                 Student Name
-            </label>
-            <input
-              type="text"
-              id="username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-                className="w-full bg-gray-50 text-gray-800 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 border border-green-300"
+              </label>
+              <input
+                type="text"
+                id="username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                className="w-full bg-gray-50 text-gray-800 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 border border-indigo-300"
                 placeholder="Enter your name"
                 required
               />
             </div>
             <div>
-              <label htmlFor="roomCode" className="block text-blue-800 font-semibold mb-2">
+              <label htmlFor="roomCode" className="block text-purple-800 font-semibold mb-2">
                 Study Group Code
               </label>
               <input
@@ -247,34 +247,34 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
                 id="roomCode"
                 value={roomCode}
                 onChange={(e) => setRoomCode(e.target.value)}
-                className="w-full bg-gray-50 text-gray-800 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 border border-green-300"
+                className="w-full bg-gray-50 text-gray-800 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 border border-indigo-300"
                 placeholder="Enter study group code"
-              required
-            />
-          </div>
+                required
+              />
+            </div>
 
             {error && (
               <p className="text-red-500 text-sm">{error}</p>
             )}
 
-          <button
-            type="submit"
-              className="w-full bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 transition-colors duration-200"
-          >
+            <button
+              type="submit"
+              className="w-full bg-indigo-600 text-white px-6 py-2 rounded hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-colors duration-200"
+            >
               Join Study Group
-          </button>
-        </form>
+            </button>
+          </form>
         </div>
 
         <div className="mt-8 text-center text-sm text-gray-600">
-          <p>© 2024 GCSE Biology Revision Guide</p>
+          <p>© 2024 GCSE Chemistry Revision Guide</p>
           <p className="mt-1">For educational purposes only</p>
-          <p className="mt-1">Based on AQA GCSE Biology Specification (8461)</p>
+          <p className="mt-1">Based on AQA GCSE Chemistry Specification (8462)</p>
         </div>
 
         {/* Active Study Groups Footer */}
         <div className="mt-8 border-t border-gray-200 pt-6">
-          <h3 className="text-lg font-semibold text-blue-800 mb-4">Active Study Groups</h3>
+          <h3 className="text-lg font-semibold text-purple-800 mb-4">Active Study Groups</h3>
           {activeRooms.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
               {activeRooms.map((room) => (
@@ -284,8 +284,8 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
                   onClick={() => setRoomCode(room.name)}
                 >
                   <div className="flex justify-between items-center">
-                    <span className="font-medium text-blue-800">{room.name}</span>
-                    <span className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">
+                    <span className="font-medium text-purple-800">{room.name}</span>
+                    <span className="bg-indigo-100 text-indigo-800 text-xs px-2 py-1 rounded-full">
                       {room.userCount} {room.userCount === 1 ? 'student' : 'students'}
                     </span>
                   </div>

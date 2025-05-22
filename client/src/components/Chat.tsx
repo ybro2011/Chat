@@ -102,13 +102,13 @@ function Chat({ user, room, socket }: ChatProps) {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-green-50 p-4">
+    <div className="min-h-screen bg-gradient-to-b from-purple-50 to-indigo-50 p-4">
       <div className="max-w-6xl mx-auto">
         <div className="bg-white rounded-lg shadow-lg p-6">
           <div className="flex justify-between items-center mb-6">
             <div>
-              <h2 className="text-2xl font-semibold text-blue-800">Study Group: {room}</h2>
-              <p className="text-gray-600">Discuss biology topics with your peers</p>
+              <h2 className="text-2xl font-semibold text-purple-800">Study Group: {room}</h2>
+              <p className="text-gray-600">Discuss chemistry topics with your peers</p>
               <p className="text-sm text-gray-500 mt-1">Active members: {users.join(', ')}</p>
             </div>
             <button
@@ -132,8 +132,8 @@ function Chat({ user, room, socket }: ChatProps) {
                 <div
                   className={`inline-block max-w-[70%] rounded-lg p-3 ${
                     msg.user === user
-                      ? 'bg-green-600 text-white'
-                      : 'bg-blue-100 text-gray-800'
+                      ? 'bg-indigo-600 text-white'
+                      : 'bg-purple-100 text-gray-800'
                   }`}
                 >
                   <div className="font-semibold mb-1">
@@ -154,12 +154,12 @@ function Chat({ user, room, socket }: ChatProps) {
               type="text"
               value={message}
               onChange={(e) => setMessage(e.target.value)}
-              className="flex-1 bg-gray-50 text-gray-800 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 border border-green-300"
+              className="flex-1 bg-gray-50 text-gray-800 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 border border-indigo-300"
               placeholder="Type your message..."
             />
             <button
               type="submit"
-              className="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 transition-colors duration-200"
+              className="bg-indigo-600 text-white px-6 py-2 rounded hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-colors duration-200"
             >
               Send
             </button>
